@@ -1,0 +1,10 @@
+oauth_consumer_key=twitter oauth consumer key
+oauth_consumer_secret=twitter oauth consumer secret
+access_token=twitter access token
+access_token_secret=twitter access token secret
+tumblr_consumer_key=tumblr consumer key
+tumblr_consumer_secret=tumblr consumer secret
+tumblr_oauth_token=tumblr oauth token
+tumblr_oauth_secret=tumblr oauth secret
+tumblr_blog_dest=name of tumblr blog to post to
+use_twitter=true|false
