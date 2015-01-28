@@ -4,14 +4,14 @@ This is the source code of https://twitter.com/kaleid_o_bot a bot that takes ima
 
 There's a bunch of processing kaleidoscope code out there, and I used a lot of ideas found in them. Most of this code generates a mask, applies it to the source to make a triangle-ish shaped chunk of the image, and then writes that chunk out to a new image, rotating it a certain number of times to produce a kaleidoscop-ish image.
 
-http://www.perlitalabs.com/Kaleidoscope/
-http://www.openprocessing.org/browse/?viewBy=tags&tag=kaleidoscope
-http://davidbu.ch/mann/blog/2011-05-15/picture-kaleidoscope-processing.html
-http://math2033.uark.edu/wiki/index.php/Kaleidoscopes
-https://github.com/dbu/kaleidoscope
+* http://www.perlitalabs.com/Kaleidoscope/
+* http://www.openprocessing.org/browse/?viewBy=tags&tag=kaleidoscope
+* http://davidbu.ch/mann/blog/2011-05-15/picture-kaleidoscope-processing.html
+* https://github.com/dbu/kaleidoscope
 
-
-http://the-hollander.com/math.html
+Learn about the math/physics of kaleidoscopes here:
+* http://the-hollander.com/math.html
+* http://math2033.uark.edu/wiki/index.php/Kaleidoscopes
 
 I wanted to write a Twitter image bot that would generate kaleidoscopes based on images, and potentially animate them. I spent awhile researching, deriving some code based on the examples above, and the results are @kaleid_o_bot
 
