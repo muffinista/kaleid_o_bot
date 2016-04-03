@@ -1,3 +1,6 @@
+/**
+ * boring twitter stream adapter that just follows users who follow it. you can extend this to add other interactions
+ */
 class AutoFollowListener extends UserStreamAdapter {
   public void onStatus(Status status) {
   }

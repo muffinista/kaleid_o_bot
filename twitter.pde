@@ -28,6 +28,9 @@ void tweetPic(File _file, String theTweet, Status source) {
   }
 }
 
+/**
+ * listen for incoming tweets and if they match our requirements, generate some output
+ */
 class Listener extends AutoFollowListener {
   public void onStatus(Status status) {
     println(status.getUser().getScreenName() + " - " + username);

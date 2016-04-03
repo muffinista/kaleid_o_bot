@@ -146,31 +146,31 @@ class Request {
     String s = "";
     switch(spot) {
     case 8:
-      s = "#north"; 
+      s = "north"; 
       break;
     case 9:
-      s = "#northeast"; 
+      s = "northeast"; 
       break;
     case 6:
-      s = "#east"; 
+      s = "east"; 
       break;
     case 3:
-      s = "#southeast"; 
+      s = "southeast"; 
       break;
     case 2:
-      s = "#south"; 
+      s = "south"; 
       break;
     case 1:
-      s = "#southwest"; 
+      s = "southwest"; 
       break;
     case 4:
-      s = "#west"; 
+      s = "west"; 
       break;
     case 7:
-      s = "#northwest"; 
+      s = "northwest"; 
       break;
     case 5:
-      s = "#center"; 
+      s = "center"; 
       break;
     }
   

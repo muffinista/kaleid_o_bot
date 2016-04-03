@@ -28,7 +28,7 @@ This code uses a bunch of existing libraries to generate output, including:
 
 ## Setup
 If you want to run the code, you will need to copy 
-data/config.properties.example to data/config.properties, and put in credentials for Twitter -- and Tumblr if you want to use that too.
+data/config.properties.example to data/config.properties, and put in credentials for Twitter -- and Tumblr if you want to use that too. If you want to just run some test code, set `use_twitter=false`. When you run the code, it will grab a local file and render it. This is handy for testing, tweaking things, etc.
 
 ## Building/Running the App
 You can choose to just run the app in the Processing IDE if you want. That certainly works. I'm running @kaleid_o_bot on a remote server so that I can turn my computer off from time to time. Here's the rough steps I use for that:

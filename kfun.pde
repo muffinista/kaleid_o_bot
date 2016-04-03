@@ -15,7 +15,6 @@ import com.tumblr.jumblr.responses.*;
 import com.tumblr.jumblr.*;
 import com.tumblr.jumblr.request.*;
 
-//float MASK_SCALE = 3.2f;
 float MASK_SCALE = 1.2f;
 float AXIS_PADDING = 0.4;
 
@@ -143,7 +142,7 @@ void renderAndTweet(PImage img, Status source) {
       System.out.println("Temp file : " + temp.getAbsolutePath());
       pg.save(temp.getAbsolutePath()); 
       
-      String text = "@" + source_user + " here you go " + r.angleToHash() + " #" + r.slices() + "slices";  
+      String text = "@" + source_user + " here you go " + r.angleToHash() + " " + r.slices() + "slices";  
       tweetPic(temp, text, source);
 
       if ( post_to_tumblr == true ) {
