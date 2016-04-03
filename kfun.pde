@@ -61,15 +61,25 @@ int tumblr_output_frames = 15;
 
 // set to true to connect to twitter and work as a bot
 // set to false for running test code
-boolean use_twitter;
+boolean use_twitter = false;
 
 // accounts that we might ignore if we're in a canoe
-String limited_accounts[] = new String[]{"badpng","img2ascii","ushouldframeit", "jpgglitchbot", "commonsbot", "imgshredder", "lowpolybot", "pixelsorter", "smoorpio"};
+String limited_accounts[] = new String[]{
+  "badpng",
+  "img2ascii",
+  "ushouldframeit",
+  "jpgglitchbot",
+  "commonsbot",
+  "imgshredder",
+  "lowpolybot",
+  "pixelsorter",
+  "smoorpio"};
 float ignore_chance = 0.20f;
 
 Listener listener;
 
 void setup() {
+  size(800, 800);
   noLoop();
   loadConfig();
 
@@ -92,9 +102,6 @@ void setup() {
 
     listener = new Listener();
     twitter.addListener(listener);
-  }
-  else {
-    size(output_width, output_height);
   }
 }
 
@@ -119,7 +126,6 @@ void draw() {
 void renderAndTweet(PImage img, Status source) {
   Request r = new Request(this, img, source);
 
-  String txt = source.getText();
   String source_user = source.getUser().getScreenName();
 
   // small chance of posting to tumblr. this is sort of dumb
