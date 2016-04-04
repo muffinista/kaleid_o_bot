@@ -18,9 +18,13 @@ private static AccessToken loadAccessToken() {
 
 void tweetPic(File _file, String theTweet, Status source) {
   try {
+    UploadedMedia media = tweeter.uploadMedia(_file);
+    long[] mediaIds = new long[1];
+    mediaIds[0] = media.getMediaId(); 
+    
     StatusUpdate status = new StatusUpdate(theTweet);
     status.inReplyToStatusId(source.getId());
-    status.setMedia(_file);
+    status.setMediaIds(mediaIds);
     tweeter.updateStatus(status);
   }
   catch (TwitterException te) {
@@ -80,5 +84,3 @@ class Listener extends AutoFollowListener {
     }
   }
 }
-
-

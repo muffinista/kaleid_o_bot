@@ -1,3 +1,4 @@
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -7,7 +8,6 @@ import java.io.FileNotFoundException;
 
 import twitter4j.*;
 import gifAnimation.*;
-import megamu.shapetween.*;
 
 import com.tumblr.jumblr.types.*;
 import com.tumblr.jumblr.exceptions.*;
@@ -112,7 +112,7 @@ void draw() {
   }
   else {
     // render a test image
-    Request r = new Request(this, loadImage("test.png"), "#20frames #west #noanimate");
+    Request r = new Request(this, loadImage("test.png"), "#20frames #west #animate");
 
     PGraphics x = r.renderSingleFrame();
     println(x);
@@ -133,7 +133,7 @@ void renderAndTweet(PImage img, Status source) {
 
   if ( r.animate ) {
     File temp = r.renderAnimated(output_frames);
-    String text = "@" + source_user + " here you go #" + r.slices() + "slices #animate";  
+    String text = "@" + source_user + " here you go " + r.slices() + "slices animate";  
     tweetPic(temp, text, source);
 
     if ( post_to_tumblr == true ) {
