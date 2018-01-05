@@ -1,6 +1,9 @@
 /**
  * handles a single image request from twitter or elsewhere. generate/parse the variables we will use to output an image, etc
  */
+ 
+ int anim_delay = 150;
+
 class Request {
   String txt;
   PImage img;
@@ -29,7 +32,7 @@ class Request {
   void setValues() {
     spot = tweetToAngle();
     slices = getTotalSlices();
-    animate = tweetToAnimate();
+    animate = true; //tweetToAnimate();
 
     if ( animate ) {
       width = animated_output_width; 
@@ -37,8 +40,9 @@ class Request {
     }
     else {
       width = output_width; 
-      height = output_height;       
+      height = output_height;
     }
+      println("set dimensions to " + width + "x" + height);
   }
 
   int requiredSourceWidth() {
@@ -62,12 +66,6 @@ class Request {
     }
     else if ( txt.indexOf("#12slices") != -1 ) {
       total = 12;
-    }
-    else if ( txt.indexOf("#8slices") != -1 ) {
-      total = 8;
-    }
-    else if ( txt.indexOf("#4slices") != -1 ) {
-      total = 4;
     }
   
     if ( total == 0 ) {
@@ -234,22 +232,14 @@ class Request {
       target.y = (int)(c.y + minorAxis * sin(t));      
     }
 
-    // prevent clipping outside of the image
-    // target.x = constrain(target.x, 0, img.width - slice_w);
-    // target.y = constrain(target.y, 0, img.height - slice_h);
-
-
-    println(target.x + ", " + target.y);
+    //println(target.x + ", " + target.y);
     return target;
   }
 
 
-  //
-  // 
-  //
   PImage getImageChunk(int output_width, int output_height, PVector p) {
     //the width and height parameters for the mask
-    int w =int(output_width / MASK_SCALE); 
+    int w = int(output_width / MASK_SCALE); 
     int h = int(output_height / MASK_SCALE); 
 
     //create a mask of a slice of the original image.
@@ -263,9 +253,8 @@ class Request {
     selection_mask.arc(0, 0, 2*w, 2*h, 0, e);
     selection_mask.endDraw(); 
 
-    println("IMG DIM: " + img.width + " x " + img.height);
-
-    println("copy from " + p.x + ", " + p.y);
+    //    println("IMG DIM: " + img.width + " x " + img.height);
+    //    println("copy from " + p.x + ", " + p.y);
 
     //
     // make a copy of the image with copies of the image on all sides, for wrapping
@@ -277,15 +266,13 @@ class Request {
         foo.image(img, x * img.width, y * img.height);
       }
     }
-    //foo.get(0, 0);
     foo.translate(img.width, img.height);
     foo.endDraw();
 
     PImage slice = createImage(w, h, RGB); 
-    //    slice = img.get(int((p.x)), int((p.y)), w, h);
     slice = foo.get(int((p.x)), int((p.y)), w, h);
     slice.mask(selection_mask); 
-//    slice.save("foo.png");
+    //slice.save("foo.png");
 
     return slice;
   }
@@ -314,8 +301,35 @@ class Request {
     cropped = img.get(x, y, w, h);
     return cropped;
   }
+  
+  int tiles = 3;
+  int tile_padding = 20;
+
+  PImage tileImage(PImage img) {
+    PImage tiled;
+    int padding = tiles * tile_padding * 2;
+    PGraphics foo = createGraphics((img.width * tiles) + padding, (img.height * tiles) + padding);
+
+    foo.beginDraw();
+    foo.background(255, 255, 255);
+    
+    for ( int x = 0; x < tiles; x++ ) {
+      for ( int y = 0; y < tiles; y++ ) {
+        int x_offset = (x*2 + 1) * tile_padding;
+        int y_offset = (y*2 + 1) * tile_padding;
+
+        foo.image(img, x_offset + x * img.width, y_offset + y * img.height);
+      }
+    }
+    foo.endDraw();
+
+    tiled = foo.get(0, 0, (img.width * tiles) + padding, (img.height * tiles) + padding);
+    return tiled;
+  }
 
   void preRenderTasks() {
+    this.img = tileImage(this.img);
+
     if ( this.img.height < requiredSourceHeight() ) {
       println("resizing h from " + img.height + " to " + requiredSourceHeight());
       this.img.resize(0, requiredSourceHeight());
@@ -365,11 +379,12 @@ class Request {
     //  gifExport.setTransparent(0, 0, 0);
     gifExport.setDispose( GifMaker.DISPOSE_KEEP );
     gifExport.setRepeat(0);
-    gifExport.setDelay(350);
+    gifExport.setQuality(100);
+    gifExport.setDelay(anim_delay);
 
   //  PVector target;
 
-    Tween ani = new Tween(app, frames, Tween.FRAMES, Shaper.LINEAR);
+    Tween ani = new Tween(app, frames, Tween.FRAMES);
     float step = TWO_PI / frames;
     for ( int i = 0; i < frames; i++ ) {
       PVector target = new PVector();
@@ -377,6 +392,7 @@ class Request {
       target.x = (int)(c.x + majorAxis * cos(t * TWO_PI));
       target.y = (int)(c.y + minorAxis * sin(t * TWO_PI));
 
+      println("render frame: " + i + "/" + frames);
       PGraphics pg = renderSingleFrame(target);
       gifExport.addFrame(pg);
       ani.tick();
@@ -400,8 +416,7 @@ class Request {
 
   PGraphics renderSingleFrame(PVector p) {
     int totalSlices = this.slices();
-    println("SLICES: " + totalSlices);
-    println("w: " + this.img.width + ", h: " + this.img.height);
+    println("slices: " + totalSlices + " w: " + this.img.width + ", h: " + this.img.height);
 
     PImage slice = getImageChunk(this.width, this.height, p);
 
@@ -423,7 +438,6 @@ class Request {
     
     pg.endDraw();
 
-    println("done!");
     return pg;
   }
 

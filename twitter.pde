@@ -1,3 +1,7 @@
+import java.io.InputStream;
+import java.io.FileInputStream;
+
+
 /**
  * routines for interacting with twitter
  */
@@ -17,8 +21,13 @@ private static AccessToken loadAccessToken() {
 }
 
 void tweetPic(File _file, String theTweet, Status source) {
+  println(theTweet);
+
   try {
-    UploadedMedia media = tweeter.uploadMedia(_file);
+    InputStream stream = new FileInputStream(_file);
+    
+    println("upload gif: " + _file.length());
+    UploadedMedia media = tweeter.uploadGIF(stream, _file.length());
     long[] mediaIds = new long[1];
     mediaIds[0] = media.getMediaId(); 
     
@@ -26,8 +35,13 @@ void tweetPic(File _file, String theTweet, Status source) {
     status.inReplyToStatusId(source.getId());
     status.setMediaIds(mediaIds);
     tweeter.updateStatus(status);
+    
+    println("done!");
   }
   catch (TwitterException te) {
+    println("Error: "+ te.getMessage()); 
+  }
+  catch (FileNotFoundException te) {
     println("Error: "+ te.getMessage()); 
   }
 }
@@ -37,7 +51,7 @@ void tweetPic(File _file, String theTweet, Status source) {
  */
 class Listener extends AutoFollowListener {
   public void onStatus(Status status) {
-    println(status.getUser().getScreenName() + " - " + username);
+    //println(status.getUser().getScreenName() + " - " + username);
     if ( status.getUser().getScreenName().equals(username) ) {
       // println("skipping because it's from me");
       return;

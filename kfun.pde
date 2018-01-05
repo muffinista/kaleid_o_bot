@@ -20,7 +20,7 @@ float AXIS_PADDING = 0.4;
 
 // scaling will clip the outside edge of the image chunk, which
 // means that our output won't look like a wacky circle
-float SLICE_SCALE_AMOUNT = 1.1f;
+float SLICE_SCALE_AMOUNT = 1.2f;
 
 String username;
 
@@ -47,12 +47,12 @@ AccessToken accessToken;
 Twitter tweeter;
 
 // we'll output different resolutions for animated gifs vs single frames to get around twitter's image size limits
-int output_width = 800;
-int output_height = 800;
+int output_width = 1280;
+int output_height = 1080;
 
-int animated_output_width = 500;
-int animated_output_height = 500;
-int output_frames = 12;
+int animated_output_width = 600;
+int animated_output_height = 600;
+int output_frames = 40;
 
 // and we'll mess with tubmlr options too
 int tumblr_output_width = 500;
@@ -61,7 +61,7 @@ int tumblr_output_frames = 15;
 
 // set to true to connect to twitter and work as a bot
 // set to false for running test code
-boolean use_twitter = false;
+boolean use_twitter = true;
 
 // accounts that we might ignore if we're in a canoe
 String limited_accounts[] = new String[]{
@@ -79,17 +79,22 @@ float ignore_chance = 0.20f;
 Listener listener;
 
 void setup() {
-  size(800, 800);
+  size(1280, 1080);
   noLoop();
   loadConfig();
 
   if ( use_twitter ) {
-    twitter = new TwitterStreamFactory().getInstance();
     accessToken = loadAccessToken();
+    ConfigurationBuilder builder = new ConfigurationBuilder();
+    builder.setDebugEnabled(true);
+    builder.setOAuthConsumerKey(oauth_consumer_key);
+    builder.setOAuthConsumerSecret(oauth_consumer_secret);
+    builder.setOAuthAccessToken(access_token);
+    builder.setOAuthAccessTokenSecret(access_token_secret);
+    Configuration conf = builder.build();
+    twitter = new TwitterStreamFactory(conf).getInstance();
 
-    tweeter = TwitterFactory.getSingleton();
-
-    connectTwitter();
+    tweeter = new TwitterFactory(conf).getInstance();
 
     try {
       username = tweeter.getScreenName();
@@ -111,13 +116,18 @@ void draw() {
     twitter.user();
   }
   else {
+    background(0);
     // render a test image
-    Request r = new Request(this, loadImage("test.png"), "#20frames #west #animate");
+    Request r = new Request(this, loadImage("test.png"), "#20frames #west #noanimate");
 
     PGraphics x = r.renderSingleFrame();
     println(x);
     image(x, 0, 0);
   }
+}
+
+void mouseClicked() {
+ draw(); 
 }
 
 /**

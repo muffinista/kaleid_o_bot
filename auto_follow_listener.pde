@@ -24,4 +24,3 @@ class AutoFollowListener extends UserStreamAdapter {
     }
   }
 }
-

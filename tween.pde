@@ -83,11 +83,6 @@ public static final float timeScale = 1.0f;
 	protected boolean useShapeMethod;
 	
 	/**
-	 * The Shaper that maps time to position
-	 */
-	protected Shaper shaper;
-
-	/**
 	 * Count of how many times the Tween has repeated for the current 'start'
 	 */
 	protected int playCount;
@@ -104,26 +99,19 @@ public static final float timeScale = 1.0f;
 	 * @param easing the easing shape that this tween will use for position, see easing for details
 	 * @param mode the play mode this tween uses: ONCE, REPEAT, REVERSE_ONCE or REVERSE_REPEAT
 	 */
-	public Tween( PApplet parent, float duration, boolean durationType, Object easing, int mode ){
+	public Tween( PApplet parent, float duration, boolean durationType, int mode ){
 		setDuration( duration, durationType );
 		this.mode = mode;
 
-		if( easing != null )
-			setEasing( easing );
-		
 		if( parent != null ){
 			this.parent = parent;
 		}
 		
 		start();
 	}
-	
-	public Tween( PApplet parent, float duration, boolean durationType, Object easing ){
-		this( parent, duration, durationType, easing, ONCE );
-	}
-	
+		
 	public Tween( PApplet parent, float duration, boolean durationType ){
-		this( parent, duration, durationType, null );
+		this( parent, duration, durationType, ONCE );
 	}
 	
 	public Tween( PApplet parent, float duration ){
@@ -226,61 +214,7 @@ public static final float timeScale = 1.0f;
 		if( !isFrameBased )
 			this.duration /= 1000d;
 	}
-	
-	/**
-	 * setEasing takes a Shaper and applies it to this tween as the easing function
-	 * This can work in a variety of ways:
-	 * If the shape is a Shaper object, it uses it's "shape" method
-	 * If the shape is a String, it looks for that method within the main PApplet sketch
-	 * If the shape is a Class object, it creates a new instance of an assumed Shaper type
-	 * @param shape The shaper to be used
-	 * @param easeMode The easing mode to be used: IN, OUT, IN_OUT, SEAT
-	 */
-	public void setEasing( Object shape, int easeMode ){
-		setEasing(shape);
-		setEasingMode(easeMode);
-	}
-	
-	public void setEasing( Object shape ){
-		try{
-			if( shape instanceof String ){
-				useShapeMethod = true;
-				shapeMethod = parent.getClass().getMethod( (String) shape, ARGS );
-			}else{
-				useShapeMethod = false;
-				if( shape instanceof Shaper ){
-					shaper = (Shaper) shape;
-				}else if( shape instanceof Class ){
-					shaper = (Shaper) ((Class) shape).newInstance();
-				}else{
-					shaper = null;
-				}
-			}
 
-			if( isTweening )
-				updatePosition();
-
-		}catch( Exception e ){
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Sets the easing mode for this Tween
-	 * @param easeMode The easing mode to be used: IN, OUT, IN_OUT, SEAT
-	 */
-	public void setEasingMode( int easeMode ){
-		if( shaper != null )
-			shaper.setMode(easeMode);
-	}
-	
-	/**
-	 * Removes easing, reverting to a linear relationship between time and position
-	 */
-	public void noEasing(){
-		setEasing( null );
-	}
-	
 	/**
 	 * Changes the playmode to this new playmode:
 	 * ONCE will animate from beginning to end and then stop
@@ -311,12 +245,6 @@ public static final float timeScale = 1.0f;
 	
 	//	 getting advanced variables
 	
-	/**
-	 * Returns the Shaper object being used as the easing function
-	 */
-	public Shaper getEasing(){
-		return shaper;
-	}
 	
 	/**
 	 * Returns how many times the Tween has played through
@@ -329,18 +257,14 @@ public static final float timeScale = 1.0f;
 	 * Returns the speed of the Tween in normalized unit per duration, i.e. returning 1 is standard linear motion
 	 */
 	public float speed(){
-		if( shaper == null )
 			return inReverse?-1:1;
-		return (inReverse?-1:1) * shaper.slope( (float) time );
 	}
 	
 	/**
 	 * Returns the force of the Tween in normalized unit per duration, i.e. returning 0 is no acceleration, such as any linear motion.
 	 */
 	public float force(){
-		if( shaper == null )
 			return 0;
-		return (inReverse?-1:1) * shaper.secondSlope( (float) time );
 	}
 
 	
@@ -424,12 +348,8 @@ public static final float timeScale = 1.0f;
 			e.printStackTrace();
 		}
 		
-		if( shaper == null ){
 			position = (float) time;
 			return;
-		}
-			
-		position = shaper.shape((float) time);
 	}
 
 }

@@ -33,15 +33,5 @@ public interface ShapeTweenConstants {
 	// When looking for methods, this is the argument signature to look for
 	
 	public static final Class[] ARGS = {float.class};
-	
-	// The built in shaper functions
-	
-	public static final Class LINEAR = LinearShaper.class;
-	public static final Class COSINE = CosineShaper.class;
-	public static final Class QUADRATIC = QuadraticShaper.class;
-	public static final Class CIRCULAR = CircularShaper.class;
-	public static final Class BEZIER = BezierShaper.class;
-	public static final Class BACK = BackShaper.class;
-	public static final Class BOUNCE = BounceShaper.class;
-	
+		
 }

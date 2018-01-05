@@ -44,4 +44,3 @@ void loadConfig() {
     e.printStackTrace();
   }
 }
-
